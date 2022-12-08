@@ -1,0 +1,3 @@
+@ECHO off
+IF NOT EXIST tools mkdir tools
+"C:\Program Files\qemu\qemu-system-x86_64.exe" -name "Debugger" -drive file=Build/Ovmf3264/DEBUG_VS2019/FV/OVMF_CODE.fd,if=pflash,format=raw,unit=0,readonly=on -drive file=Build/Ovmf3264/DEBUG_VS2019/FV/OVMF_VARS.fd,if=pflash,format=raw,unit=1 -drive file=fat:rw:tools/,media=disk,if=virtio,format=raw -m 512 -machine q35,smm=on -nodefaults -vga std -global driver=cfi.pflash01,property=secure,value=on -global ICH9-LPC.disable_s3=1 -serial file:log.txt

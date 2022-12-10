@@ -1,3 +1,18 @@
 @ECHO off
 IF NOT EXIST tools mkdir tools
-"C:\Program Files\qemu\qemu-system-x86_64.exe" -name "Debugger" -drive file=Build/Ovmf3264/DEBUG_VS2019/FV/OVMF_CODE.fd,if=pflash,format=raw,unit=0,readonly=on -drive file=Build/Ovmf3264/DEBUG_VS2019/FV/OVMF_VARS.fd,if=pflash,format=raw,unit=1 -drive file=fat:rw:tools/,media=disk,if=virtio,format=raw -m 512 -machine q35,smm=on -nodefaults -vga std -global driver=cfi.pflash01,property=secure,value=on -global ICH9-LPC.disable_s3=1 -serial file:log.txt
+
+set QEMU_PARS=-name "Debugger"
+set QEMU_PARS=%QEMU_PARS% -drive file=Build/Ovmf3264/DEBUG_VS2019/FV/OVMF_CODE.fd,if=pflash,format=raw,unit=0,readonly=on
+set QEMU_PARS=%QEMU_PARS% -drive file=Build/Ovmf3264/DEBUG_VS2019/FV/OVMF_VARS.fd,if=pflash,format=raw,unit=1
+set QEMU_PARS=%QEMU_PARS% -drive file=fat:rw:tools/,media=disk,if=virtio,format=raw 
+set QEMU_PARS=%QEMU_PARS% -m 512
+set QEMU_PARS=%QEMU_PARS% -machine q35,smm=on
+set QEMU_PARS=%QEMU_PARS% -nodefaults
+set QEMU_PARS=%QEMU_PARS% -vga std
+set QEMU_PARS=%QEMU_PARS% -global driver=cfi.pflash01,property=secure,value=on 
+set QEMU_PARS=%QEMU_PARS% -global ICH9-LPC.disable_s3=1
+set QEMU_PARS=%QEMU_PARS% -monitor tcp:localhost:20717,server
+set QEMU_PARS=%QEMU_PARS% -serial file:log.txt
+
+start "Monitor" /B "putty\putty.exe" telnet://localhost:20717
+"C:\Program Files\qemu\qemu-system-x86_64.exe" %QEMU_PARS%
